@@ -1,0 +1,15 @@
+java -jar sgk_export.jar sgk_1 sgk_one
+java -jar sgk_export.jar sgk_1 sgk_two
+java -jar sgk_export.jar sgk_1 sgk_three
+java -jar sgk_export.jar sgk_1 sgk_four
+java -jar sgk_export.jar sgk_1 sgk_five
+java -jar sgk_export.jar sgk_2 sgk_one
+java -jar sgk_export.jar sgk_2 sgk_two
+java -jar sgk_export.jar sgk_2 sgk_three
+java -jar sgk_export.jar sgk_2 sgk_four
+java -jar sgk_export.jar sgk_2 sgk_five
+java -jar sgk_export.jar sgk_3 sgk_one
+java -jar sgk_export.jar sgk_3 sgk_two
+java -jar sgk_export.jar sgk_3 sgk_three
+java -jar sgk_export.jar sgk_3 sgk_four
+java -jar sgk_export.jar sgk_3 sgk_five

@@ -1,5 +1,4 @@
 package com.sidooo;
-import com.sun.deploy.util.StringUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -10,7 +9,13 @@ public class Main {
 
     private static void exportData(ResultSet rs, PrintWriter output) {
         try {
+            long  count=0;
             while(rs.next()) {
+
+                count++;
+                if (count % 5000 == 0) {
+                    System.out.println("Export "+count+" records.");
+                }
 
                 String  name = rs.getString("truename");
                 String  account = rs.getString("username");
@@ -46,16 +51,29 @@ public class Main {
         }
     }
 
+    public static void usage() {
+
+        System.out.println("sgk_export <database> <table>.");
+    }
+
     public static void main(String[] args) {
 	    // write your code here
 
         String database = args[0];
         String table = args[1];
 
+        if (args.length != 2) {
+            usage();
+            return;
+        }
+
+        System.out.println("Database: "+database);
+        System.out.println("Table: " + table);
+
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://10.18.102.133/" + database;
+        String url = "jdbc:mysql://192.168.58.137/"+database+"?useCursorFetch=true";
         String user="root";
-        String password = "root";
+        String password = "";
 
         try {
             Class.forName(driver);
@@ -63,20 +81,25 @@ public class Main {
 
             if (!conn.isClosed()) {
                 System.out.println("Succeeded connection to the Database!");
-
-                Statement statement = conn.createStatement();
-
                 String sql = "select * from " + table;
-                ResultSet rs = statement.executeQuery(sql);
+                conn.setAutoCommit(false);
+                PreparedStatement stmt =
+                        conn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
+                stmt.setFetchSize(Integer.MIN_VALUE);
+                stmt.setFetchDirection(ResultSet.FETCH_REVERSE);
+                //stmt.setMaxRows(100);
+                stmt.execute();
+                ResultSet rs = stmt.getResultSet();
 
                 String outputFileName = database
                         +"-"+table
                         +"-"+"name-account-sex-age-password-salt-email-qq-sfz-mobile-address-source"
-                        +"-"+".csv";
+                        +".csv";
                 PrintWriter output = new PrintWriter(new BufferedOutputStream(new FileOutputStream(outputFileName)));
                 exportData(rs, output);
                 output.close();
                 rs.close();
+                stmt.close();
                 conn.close();
             }
 

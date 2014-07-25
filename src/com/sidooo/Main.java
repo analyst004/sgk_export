@@ -9,6 +9,9 @@ public class Main {
 
     private static void exportData(ResultSet rs, PrintWriter output) {
         try {
+
+            String title = "name,account,sex,age,password,salt,email,qq,sfz,mobile,address,source";
+            output.println(title);
             long  count=0;
             while(rs.next()) {
 
@@ -91,10 +94,7 @@ public class Main {
                 stmt.execute();
                 ResultSet rs = stmt.getResultSet();
 
-                String outputFileName = database
-                        +"-"+table
-                        +"-"+"name-account-sex-age-password-salt-email-qq-sfz-mobile-address-source"
-                        +".csv";
+                String outputFileName = database+"-"+table+".csv";
                 PrintWriter output = new PrintWriter(new BufferedOutputStream(new FileOutputStream(outputFileName)));
                 exportData(rs, output);
                 output.close();
